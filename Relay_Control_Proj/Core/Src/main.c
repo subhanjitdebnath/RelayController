@@ -33,6 +33,9 @@
 volatile ScreenCtrl   Scrn_Ctrl;
 GPIO_PinState BT1,BT2,BT3,OPT1,OPT2,OPT3,OPT4,RELAY1,RELAY2;
 FlagStatus SequenceStart = RESET;
+
+uint16_t IdealTime = 10; //in sec
+uint32_t CurrentTime,DiffenceTime;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -68,6 +71,7 @@ extern uint8_t IndexNo;
 extern FlagStatus Ok_Pressed;
 extern FlagStatus Update_req;
 
+FlagStatus cleardisp;
 uint16_t On_delay_R1,On_delay_R2,Off_delay_R1,Off_delay_R2;
 /* USER CODE END PFP */
 
@@ -353,8 +357,26 @@ void Operation()
 		}
 		//Display_run();
 		HAL_Delay(200);
+		CurrentTime = HAL_GetTick();
+		DiffenceTime = 0;
 	}
-	Display_run();
+
+	DiffenceTime = Absolute(CurrentTime, HAL_GetTick());
+	if(DiffenceTime > IdealTime * 1000)
+	{
+		if(cleardisp)
+		{
+			SSD1306_Clear();
+			cleardisp = RESET;
+		}
+		//Animation();
+		PumpStatus();
+	}
+	else
+	{
+		Display_run();
+		cleardisp = SET;
+	}
 }
 /* USER CODE END 4 */
 

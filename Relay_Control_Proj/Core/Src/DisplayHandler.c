@@ -6,7 +6,7 @@
  */
 #include "DisplayHandler.h"
 #include "bitmap.h"
-#include "horse_anim.h"
+#include "PumpAnimation.h"
 #include <stdio.h>
 #include <string.h>
 #include "FlashReadWrite.h"
@@ -30,6 +30,8 @@ char* RelayStatus[] ={"<Enable>","<Disable>","<Manual>"};
 
 char* StartAs[] ={":StartOn",":StartOFF"};
 
+char* RelayState[]= {" OFF"," ON"};
+
 
 extern uint16_t On_Delay;
 extern uint16_t Off_Delay;
@@ -46,55 +48,50 @@ void Screen_Welcome()
 	LoadingScreen();
 }
 
+void PumpStatus(void)
+{
+
+
+	    SSD1306_GotoXY (0,10);
+	    if(RELAY1)
+	    {
+		SSD1306_Puts ("Relay1 ON ", &Font_11x18, 1);
+	    }
+	    else
+	    {
+		SSD1306_Puts ("Relay1 OFF", &Font_11x18, 1);
+	    }
+
+		SSD1306_GotoXY (0,30);
+		if(RELAY2)
+		{
+		SSD1306_Puts ("Relay2 ON ", &Font_11x18, 1);
+		}
+		else
+		{
+		SSD1306_Puts ("Relay2 OFF", &Font_11x18, 1);
+		}
+	    SSD1306_UpdateScreen();
+}
 void Animation(void)
 {
 	//// HORSE ANIMATION START //////
 
 		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse1,128,64,1);
+		  SSD1306_DrawBitmap(0,0,PumpImage,128,64,1);
 		  SSD1306_UpdateScreen();
 
 		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse2,128,64,1);
+		  SSD1306_DrawBitmap(0,0,PumpImage1,128,64,1);
 		  SSD1306_UpdateScreen();
 
 		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse3,128,64,1);
+		  SSD1306_DrawBitmap(0,0,PumpImage2,128,64,1);
 		  SSD1306_UpdateScreen();
 
 		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse4,128,64,1);
+		  SSD1306_DrawBitmap(0,0,PumpImage3,128,64,1);
 		  SSD1306_UpdateScreen();
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse5,128,64,1);
-		  SSD1306_UpdateScreen();
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse6,128,64,1);
-		  SSD1306_UpdateScreen();
-
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse7,128,64,1);
-		  SSD1306_UpdateScreen();
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse8,128,64,1);
-		  SSD1306_UpdateScreen();
-
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse9,128,64,1);
-		  SSD1306_UpdateScreen();
-
-
-		  SSD1306_Clear();
-		  SSD1306_DrawBitmap(0,0,horse10,128,64,1);
-		  SSD1306_UpdateScreen();
-
-
-		  //// HORSE ANIMATION ENDS //////
 }
 
 void LoadingScreen(void)
@@ -276,6 +273,7 @@ void Display_run()
 				MainScreen(1,1,0);
 				if(Ok_Pressed)
 				{
+					SequenceStart = RESET;
 					ScreenPosition = 9;
 					statusOk = RESET;
 					Ok_Pressed = RESET;

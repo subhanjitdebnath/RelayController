@@ -47,7 +47,7 @@ void TimeChangeLayout(uint8_t timePos, uint8_t *SubIndex);
 void UpdateRelaystate(uint8_t *data);
 void MessageScreen1();
 void MessageScreen2();
-
+void PumpStatus(void);
 void Relay1TimerScreenLayout(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2,SSD1306_COLOR_t sel3,uint16_t On_Delay, uint16_t Off_Delay );
 void Relay2TimerScreenLayout(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2,SSD1306_COLOR_t sel3,uint16_t On_Delay, uint16_t Off_Delay );
 
