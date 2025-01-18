@@ -54,4 +54,5 @@ void Relay2TimerScreenLayout(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2,SSD1306_
 void TimeSlection(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2, SSD1306_COLOR_t sel3);
 void OnDelay(uint16_t On_Delay);
 void OffDelay(uint16_t Off_Delay);
+void ConfigurationScreen(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2 ,SSD1306_COLOR_t sel3 );
 #endif /* INC_DISPLAYHANDLER_H_ */

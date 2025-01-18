@@ -14,18 +14,21 @@
 extern FONT_TYPE __font_type__;
 
 uint8_t RelayStatusVal[2] = {0,0};
+uint8_t RelayStartAsVal[2] = {0,0};
 static char Line1[20];
 static char Line2[20];
 
 extern uint16_t On_delay_R1,On_delay_R2,Off_delay_R1,Off_delay_R2;
 
-char* FixeLable[] = {"    MENU ", " RELAY SETTING ", " UP   OK     DN", " TIME SET", "  Saving...","    LED", " PREV   OK   NEXT ", " DN   OK     UP"};
+char* FixeLable[] = {"    MENU ", " RELAY SETTING ", " UP   OK     DN", " TIME SET", "  Saving...","    LED", " PREV   OK   NEXT ", " DN   OK     UP"," CONFIGURE"};
 
 char* TimeDateLable[] = {"  On Delay","  Off Delay","Day","Month","Year","ms"," s"};
 
-char* MenuName[] = { " 1. RELAY SETTING" ," 2. Timer setting", " 3. Save Setting" };
+char* MenuName[] = { " 1. RELAY SETTING" ," 2. Timer setting", " 3. Configuration" };
 char* RelayName[] ={" Relay 1"," Relay 2"};
 char* RelayStatus[] ={"<Enable>","<Disable>","<Manual>"};
+
+char* StartAs[] ={":StartOn",":StartOFF"};
 
 
 extern uint16_t On_Delay;
@@ -231,11 +234,11 @@ void MessageScreen2()
 {
 	SSD1306_Clear();
 	SSD1306_GotoXY (0,20);
-	SSD1306_Puts ("SAVING TIME", &Font_11x18, 1);
+	SSD1306_Puts ("SAVING TIME...", &Font_11x18, 1);
 	SSD1306_GotoXY (0,40);
-	SSD1306_Puts ("STATE", &Font_11x18, 1);
+	SSD1306_Puts (" SEQ START ", &Font_11x18, 1);
 	SSD1306_UpdateScreen();
-	HAL_Delay(200);
+	HAL_Delay(1000);
 }
 
 void Display_run()
@@ -273,12 +276,10 @@ void Display_run()
 				MainScreen(1,1,0);
 				if(Ok_Pressed)
 				{
-					SaveData();
-					ScreenPosition = 0;
-					IndexNo = 0;
-					Ok_Pressed = RESET;
+					ScreenPosition = 9;
 					statusOk = RESET;
-					MessageScreen2();
+					Ok_Pressed = RESET;
+					IndexNo = 0;
 				}
 				break;
 			default:
@@ -494,6 +495,43 @@ void Display_run()
 			}
 			OffDelay(Off_delay_R2);
 		break;
+	case 9: //Configuration screen
+		switch(IndexNo)
+			{
+			case 0:
+				if(Ok_Pressed)
+				{
+					UpdateRelaystate(&RelayStartAsVal[0]);
+					Ok_Pressed = RESET;
+				}
+				ConfigurationScreen(0,1,1);
+				break;
+			case 1:
+				if(Ok_Pressed)
+				{
+					UpdateRelaystate(&RelayStartAsVal[1]);
+					Ok_Pressed = RESET;
+				}
+				ConfigurationScreen(1,0,1);
+				break;
+			case 2:
+				if(Ok_Pressed)
+				{
+					SaveData();
+					ScreenPosition = 0;
+					IndexNo = 0;
+					Ok_Pressed = RESET;
+					statusOk = RESET;
+					MessageScreen2();
+				}
+				ConfigurationScreen(1,1,0);
+				break;
+			default:
+				IndexNo = 0;
+				statusOk = RESET;
+				break;
+			}
+			break;
 
 		default:
 			break;
@@ -529,6 +567,28 @@ void Relay1TimerScreenLayout(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2,SSD1306_
 	SSD1306_Clear();
     SSD1306_GotoXY (0,0);
 	SSD1306_Puts (RelayName[0], &Font_11x18, 1);
+	SSD1306_GotoXY (0,20);
+	SSD1306_Puts (Line1, &Font_7x10, sel1);
+	SSD1306_GotoXY (0,30);
+	SSD1306_Puts (Line2, &Font_7x10, sel2);
+	SSD1306_GotoXY (0,40);
+	SSD1306_Puts (" Save Setting", &Font_7x10, sel3);
+	SSD1306_GotoXY (0,52);
+	SSD1306_Puts (FixeLable[2], &Font_7x10, 1);
+    SSD1306_UpdateScreen();
+
+}
+
+void ConfigurationScreen(SSD1306_COLOR_t sel1, SSD1306_COLOR_t sel2 ,SSD1306_COLOR_t sel3 )
+{
+
+
+	UpdateLineText1(Line1,RelayName[0],StartAs[RelayStartAsVal[0]]);
+	UpdateLineText1(Line2,RelayName[1],StartAs[RelayStartAsVal[1]]);
+
+	SSD1306_Clear();
+    SSD1306_GotoXY (0,0);
+	SSD1306_Puts (FixeLable[8], &Font_11x18, 1);
 	SSD1306_GotoXY (0,20);
 	SSD1306_Puts (Line1, &Font_7x10, sel1);
 	SSD1306_GotoXY (0,30);
