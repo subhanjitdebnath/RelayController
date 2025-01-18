@@ -451,7 +451,7 @@ void Display_run()
 		On_delay_R1 = IndexNo;
 			if(Ok_Pressed)
 			{
-				ScreenPosition = 0;
+				ScreenPosition = 3;
 				IndexNo = 0;
 				Ok_Pressed = RESET;
 				statusOk = RESET;
@@ -463,7 +463,7 @@ void Display_run()
 		Off_delay_R1 = IndexNo;
 			if(Ok_Pressed)
 			{
-				ScreenPosition = 0;
+				ScreenPosition = 3;
 				IndexNo = 0;
 				Ok_Pressed = RESET;
 				statusOk = RESET;
@@ -475,7 +475,7 @@ void Display_run()
 			On_delay_R2 = IndexNo;
 			if(Ok_Pressed)
 			{
-				ScreenPosition = 0;
+				ScreenPosition = 4;
 				IndexNo = 0;
 				Ok_Pressed = RESET;
 				statusOk = RESET;
@@ -487,7 +487,7 @@ void Display_run()
 			Off_delay_R2 = IndexNo;
 			if(Ok_Pressed)
 			{
-				ScreenPosition = 0;
+				ScreenPosition = 4;
 				IndexNo = 0;
 				Ok_Pressed = RESET;
 				statusOk = RESET;
