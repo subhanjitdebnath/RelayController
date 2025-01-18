@@ -61,7 +61,7 @@ void WriteData(void)
 void RetriveData(void)
 {
 	data_to_retive data;
-	memcpy(data.data,(uint32_t*)Address, 16);
+	memcpy(data.data,(uint32_t*)Address[0], 16);
 	FlashData_.DataToSave[0] = data.Data64[0];
 	FlashData_.DataToSave[1] = data.Data64[1];
 	On_delay_R1 = FlashData_.Timeset.OnTime1;
