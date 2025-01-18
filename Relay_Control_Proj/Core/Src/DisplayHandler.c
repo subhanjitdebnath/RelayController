@@ -12,12 +12,12 @@
 #include "FlashReadWrite.h"
 
 extern FONT_TYPE __font_type__;
-
+extern GPIO_PinState RELAY1,RELAY2;
 uint8_t RelayStatusVal[2] = {0,0};
 uint8_t RelayStartAsVal[2] = {0,0};
 static char Line1[20];
 static char Line2[20];
-
+extern FlagStatus SequenceStart;
 extern uint16_t On_delay_R1,On_delay_R2,Off_delay_R1,Off_delay_R2;
 
 char* FixeLable[] = {"    MENU ", " RELAY SETTING ", " UP   OK     DN", " TIME SET", "  Saving...","    LED", " PREV   OK   NEXT ", " DN   OK     UP"," CONFIGURE"};
@@ -522,6 +522,23 @@ void Display_run()
 					IndexNo = 0;
 					Ok_Pressed = RESET;
 					statusOk = RESET;
+					SequenceStart = SET;
+					if(RelayStartAsVal[0])
+					{
+						RELAY1 = GPIO_PIN_RESET;
+					}
+					else
+					{
+						RELAY1 = GPIO_PIN_SET;
+					}
+					if(RelayStartAsVal[1])
+					{
+						RELAY2 = GPIO_PIN_RESET;
+					}
+					else
+					{
+						RELAY2 = GPIO_PIN_SET;
+					}
 					MessageScreen2();
 				}
 				ConfigurationScreen(1,1,0);

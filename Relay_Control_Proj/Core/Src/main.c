@@ -25,12 +25,14 @@
 #include <stdio.h>
 #include "DisplayHandler.h"
 #include "FlashReadWrite.h"
+#include "RelayHandler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 volatile ScreenCtrl   Scrn_Ctrl;
 GPIO_PinState BT1,BT2,BT3,OPT1,OPT2,OPT3,OPT4,RELAY1,RELAY2;
+FlagStatus SequenceStart = RESET;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -48,7 +50,6 @@ I2C_HandleTypeDef hi2c2;
 
 osThreadId defaultTaskHandle;
 osThreadId DisplayHandle;
-osThreadId LedUpdateHandle;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -59,7 +60,6 @@ static void MX_GPIO_Init(void);
 static void MX_I2C2_Init(void);
 void StartDefaultTask(void const * argument);
 void Display_init(void const * argument);
-void LedUpdate_init(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -144,10 +144,6 @@ int main(void)
   /* definition and creation of Display */
   osThreadDef(Display, Display_init, osPriorityHigh, 0, 128);
   DisplayHandle = osThreadCreate(osThread(Display), NULL);
-
-  /* definition and creation of LedUpdate */
-  osThreadDef(LedUpdate, LedUpdate_init, osPriorityIdle, 0, 128);
-  LedUpdateHandle = osThreadCreate(osThread(LedUpdate), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -375,6 +371,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+	RelaySequence();
 	GPIOUpdate();
     osDelay(50);
   }
@@ -398,25 +395,6 @@ void Display_init(void const * argument)
     osDelay(100);
   }
   /* USER CODE END Display_init */
-}
-
-/* USER CODE BEGIN Header_LedUpdate_init */
-/**
-* @brief Function implementing the LedUpdate thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_LedUpdate_init */
-void LedUpdate_init(void const * argument)
-{
-  /* USER CODE BEGIN LedUpdate_init */
-  /* Infinite loop */
-  for(;;)
-  {
-
-    osDelay(1);
-  }
-  /* USER CODE END LedUpdate_init */
 }
 
 /**
